@@ -201,7 +201,7 @@ class ShadedObject3D extends Object3D {
      */
     createVAO( gl, shader )
     {
-        throw '"ShadedObject3D.createVAO" is incomplete'
+        // throw '"ShadedObject3D.createVAO" is incomplete'
         // NOTE: There are now two versions of this.num_components -> this.num_components_vec3 and this.num_components_vec2 to accommodate texture coordinate data
 
         this.vertex_array_object = gl.createVertexArray();
@@ -217,21 +217,32 @@ class ShadedObject3D extends Object3D {
         let location = shader.getAttributeLocation( 'a_position' )
         if (location >= 0) {
             // TODO: Set up position attribute
+            gl.enableVertexAttribArray( location )
+            gl.vertexAttribPointer( location, this.num_components_vec3, gl.FLOAT, false, stride, 0 )
         }
 
         location = shader.getAttributeLocation( 'a_normal' )
         if (location >= 0) {
             // TODO: Set up normal attribute
+            offset = (this.vertices.length * 3 / num_total_components) * Float32Array.BYTES_PER_ELEMENT
+            gl.enableVertexAttribArray( location )
+            gl.vertexAttribPointer( location, this.num_components_vec3, gl.FLOAT, false,  stride, offset )
         }
 
         location = shader.getAttributeLocation( 'a_tangent' )
         if (location >= 0 && this.material.hasTexture()) {
             // TODO: Set up tangent attribute
+            offset = (this.vertices.length * 6 / num_total_components) * Float32Array.BYTES_PER_ELEMENT
+            gl.enableVertexAttribArray( location )
+            gl.vertexAttribPointer( location, this.num_components_vec3, gl.FLOAT, false, stride, offset )
         }
 
         location = shader.getAttributeLocation( 'a_texture_coord' )
         if (location >= 0 && this.material.hasTexture()) {
             // TODO: Set up texture coordinate attribute
+            offset = (this.vertices.length * 9 / num_total_components) * Float32Array.BYTES_PER_ELEMENT
+            gl.enableVertexAttribArray( location )
+            gl.vertexAttribPointer( location, this.num_components_vec2, gl.FLOAT, false, stride, offset )
         }
 
         gl.bindVertexArray( null )
@@ -247,11 +258,16 @@ class ShadedObject3D extends Object3D {
      */
     render( gl )
     {
-        throw '"ShadedObject3D.render" is incomplete'
+        // throw '"ShadedObject3D.render" is incomplete'
 
         this.shader.use( )
 
         // TODO: Pass basic material properties (kA, kD, kS, shininess)
+
+        this.shader.setUniform3f('u_material.kA', this.material.kA)
+        this.shader.setUniform3f('u_material.kD', this.material.kD)
+        this.shader.setUniform3f('u_material.kS', this.material.kS)
+        this.shader.setUniform1f('u_material.shininess', this.material.shininess)
 
         // TODO: Associate the sampler uniforms (map_kD, map_nS, map_norm) in the shader's u_material with different texture units
 

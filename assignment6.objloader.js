@@ -98,7 +98,7 @@ class OBJLoader {
         // Reorder entries to match the order of vertex position indices
         [vertex_positions, vertex_normals, vertex_texture_coords, position_indices] = this.resolveIndexGroups(vertex_positions, vertex_normals, vertex_texture_coords, position_indices, normal_indices, texture_coord_indices)
 
-        throw '"OBJLoader.load" is incomplete'
+        // throw '"OBJLoader.load" is incomplete'
 
         // TODO: Merge vertex positions and normals into a single vertex list
         // TODO: If the loaded material has texture(s), pass tangents and texture coordinates too
@@ -107,9 +107,13 @@ class OBJLoader {
             // If there is a texture, we made sure to have texture coordinates
             // We calculate the per-vertex tangents in all cases even if there is no normal map
             // This makes VAO creation easier and more uniform
-            vertex_tangents = this.calculateTangents(vertex_positions, vertex_texture_coords, position_indices)
-            
-            // TODO: Pass tangents and texture coordinates
+            vertex_tangents = this.calculateTangents(vertex_positions, vertex_texture_coords, 
+            position_indices)
+
+            vertex_data.push(...vertex_positions)
+            vertex_data.push(...vertex_normals)
+            vertex_data.push(...vertex_tangents)
+            vertex_data.push(...vertex_texture_coords)
         }
 
         return [ vertex_data, position_indices, material ]
