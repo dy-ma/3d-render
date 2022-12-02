@@ -32,8 +32,8 @@ void main() {
     // NOTE: Different from the book, try to do all calculations in world space using the TBN to transform normals
     // HINT: Refer to https://learnopengl.com/Advanced-Lighting/Normal-Mapping for all above
     // transform to world space
-    vec3 T = normalize(vec3(u_m * vec4(a_tangent, 1.0)));
-    vec3 N = normalize(vec3(u_m * vec4(a_normal, 1.0)));
+    vec3 T = normalize(vec3(u_m * vec4(a_tangent, 0.0)));
+    vec3 N = normalize(vec3(u_m * vec4(vertex_normal_world, 0.0)));
     // re-orthogonalize T with respect to N - Gram Schmidt
     T = normalize(T - dot(T, N) * N); 
     // B is perpendicular to N and T
