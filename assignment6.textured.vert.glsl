@@ -14,9 +14,8 @@ uniform mat4x4 u_p;
 // output to fragment stage
 // TODO: Create varyings to pass data to the fragment stage (position, texture coords, and more)
 out vec3 o_vertex_position_world;
-out vec3 o_vertex_normal_world;
 out vec2 o_texture_coord;
-out mat3 tbn;
+out mat3 o_tbn;
 
 void main() {
 
@@ -38,13 +37,12 @@ void main() {
     // re-orthogonalize T with respect to N - Gram Schmidt
     T = normalize(T - dot(T, N) * N); 
     // B is perpendicular to N and T
-    vec3 B = normalize(cross(N, T));
-    tbn = mat3(T, B, N);
+    vec3 B = cross(N, T);
+    o_tbn = mat3(T, B, N);
 
     // TODO: Forward data to fragment stage
     o_vertex_position_world = vertex_position_world.xyz;
-    o_vertex_normal_world = vertex_normal_world.xyz;
-
+    o_texture_coord = a_texture_coord;
 
     gl_Position = u_p * u_v * vertex_position_world;
 

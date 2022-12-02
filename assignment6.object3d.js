@@ -272,16 +272,25 @@ class ShadedObject3D extends Object3D {
         // TODO: Associate the sampler uniforms (map_kD, map_nS, map_norm) in the shader's u_material with different texture units
 
         // TODO: Activate and bind texture units if textures are present in the material
-        if (this.material.hasMapKD()) {
+        if (this.material.hasMapKD()) { // base color
             // TODO
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D, this.material.getMapKD());
+            this.shader.setUniform1i('u_material.map_kD', 0);
         }
 
-        if (this.material.hasMapNS()) {
+        if (this.material.hasMapNS()) { // roughness map
             // TODO
+            gl.activeTexture(gl.TEXTURE1);
+            gl.bindTexture(gl.TEXTURE_2D, this.material.getMapNS());
+            this.shader.setUniform1i('u_material.map_nS', 1);
         }
 
-        if (this.material.hasMapNorm()) {
+        if (this.material.hasMapNorm()) { // normal map
             // TODO
+            gl.activeTexture(gl.TEXTURE2);
+            gl.bindTexture(gl.TEXTURE_2D, this.material.getMapNorm());
+            this.shader.setUniform1i('u_material.map_norm', 2);
         }
 
         this.shader.unuse( )
